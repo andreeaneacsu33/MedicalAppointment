@@ -1,0 +1,40 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.1.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group 'MedicalAppointment'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile group: 'org.springframework', name: 'spring-web', version: '5.2.1.RELEASE'
+    compile 'org.hibernate:hibernate-core:5.2.10.Final'
+    compile group: 'org.springframework.security', name: 'spring-security-web', version: '5.2.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.2.1.RELEASE'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.1'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+    runtime group: 'org.xerial', name: 'sqlite-jdbc', version: '3.16.1'
+    implementation "javax.xml.bind:jaxb-api:2.2.11"
+    implementation "com.sun.xml.bind:jaxb-core:2.2.11"
+    implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
+    implementation "javax.activation:activation:1.1.1"
+    compile group: 'com.zsoltfabok', name: 'sqlite-dialect', version: '1.0'
+    compile group: 'org.springframework', name: 'spring-core', version: '5.2.2.RELEASE'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}

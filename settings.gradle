@@ -1,0 +1,3 @@
+rootProject.name = 'MedicalAppointment'
+include 'com.project.model'
+
