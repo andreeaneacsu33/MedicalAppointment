@@ -130,7 +130,6 @@
     </column>
     <index id="39" parent="8" name="doctor_email_uindex">
       <ColNames>email</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <key id="40" parent="8">
@@ -166,7 +165,6 @@
     <index id="47" parent="9" name="sqlite_autoindex_patient_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>email</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <key id="48" parent="9">
@@ -265,7 +263,6 @@
     </column>
     <index id="70" parent="12" name="specialization_name_uindex">
       <ColNames>name</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <key id="71" parent="12">
@@ -317,7 +314,6 @@
     </column>
     <index id="83" parent="15" name="user_email_uindex">
       <ColNames>email</ColNames>
-      <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
     <key id="84" parent="15">

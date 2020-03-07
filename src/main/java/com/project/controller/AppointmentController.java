@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class AppointmentController {
@@ -23,7 +25,17 @@ public class AppointmentController {
     public ResponseEntity<?> saveAppointment(@RequestBody AppointmentDTO appointmentDTO){
         try{
             Appointment appointment=appointmentService.save(appointmentDTO);
-            return new ResponseEntity<Appointment>(appointment, HttpStatus.OK);
+            return new ResponseEntity<>(appointment, HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/appointments/{idDoctor}",method = RequestMethod.GET)
+    public ResponseEntity<?> getAppointments(@PathVariable int idDoctor){
+        try{
+            List<Appointment> appointments=appointmentService.findAppointments(idDoctor);
+            return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }

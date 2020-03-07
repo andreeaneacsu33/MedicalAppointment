@@ -13,20 +13,26 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
     final static Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
-    @Autowired
-    private AppointmentRepository repoAppointment;
+    private final AppointmentRepository repoAppointment;
+
+    private final DoctorRepository repoDoctor;
+
+    private final PatientRepository repoPatient;
 
     @Autowired
-    private DoctorRepository repoDoctor;
-
-    @Autowired
-    private PatientRepository repoPatient;
+    public AppointmentServiceImpl(AppointmentRepository repoAppointment, DoctorRepository repoDoctor, PatientRepository repoPatient) {
+        this.repoAppointment = repoAppointment;
+        this.repoDoctor = repoDoctor;
+        this.repoPatient = repoPatient;
+    }
 
     @Override
     public Appointment save(AppointmentDTO appointmentDTO) {
@@ -52,5 +58,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         List<Appointment> appointments=new ArrayList<>();
         repoAppointment.getAll().forEach(appointments::add);
         return appointments;
+    }
+
+    @Override
+    public List<Appointment> findAppointments(int idDoctor) {
+        List<Appointment> appointments=new ArrayList<>();
+        repoAppointment.getAll().forEach(appointments::add);
+        return appointments.stream().filter(app->app.getDoctor().getId()==idDoctor).collect(Collectors.toList());
     }
 }
