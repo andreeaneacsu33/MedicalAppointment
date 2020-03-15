@@ -24,29 +24,29 @@ public class DoctorController {
     public ResponseEntity<?> getUser(@PathVariable String email){
         Doctor doctor= doctorService.findDoctor(email);
         if(doctor==null){
-            return new ResponseEntity<String>("Not found!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found!", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Doctor>(doctor,HttpStatus.OK);
+        return new ResponseEntity<>(doctor, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/doctors/page/{page}")
     public ResponseEntity<?> findPaginated(@PathVariable("page") int page){
         int totalPages=doctorService.findTotalPages();
         System.out.println(totalPages);
-        if(page>totalPages){
-            return new ResponseEntity<String>("Page not found!", HttpStatus.NOT_FOUND);
+        if(page>totalPages || page<1){
+            return new ResponseEntity<>("Page not found!", HttpStatus.NOT_FOUND);
         }
         List<Doctor> doctors=doctorService.findPaginated(page);
-        return new ResponseEntity<List<Doctor>>(doctors,HttpStatus.OK);
+        return new ResponseEntity<>(doctors, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/doctors/total")
     public ResponseEntity<?> findTotal(){
         try{
             int totalPages=doctorService.findTotalPages();
-            return new  ResponseEntity<Integer>(totalPages,HttpStatus.OK);
+            return new ResponseEntity<>(totalPages, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<String>("Error on retrieving pages!",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error on retrieving pages!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -54,9 +54,9 @@ public class DoctorController {
     public ResponseEntity<?> findOverallRating(@PathVariable int idDoctor){
         try {
             double rating = doctorService.findOverallRating(idDoctor);
-            return new ResponseEntity<Double>(rating, HttpStatus.OK);
+            return new ResponseEntity<>(rating, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<String>("Error on retrieving overall rating!",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error on retrieving overall rating!", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -64,9 +64,9 @@ public class DoctorController {
     public ResponseEntity<?> findOverallWaitingTime(@PathVariable int idDoctor){
         try {
             double waitingTime=doctorService.findOverallWaitingTime(idDoctor);
-            return new ResponseEntity<Double>(waitingTime, HttpStatus.OK);
+            return new ResponseEntity<>(waitingTime, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<String>("Error on retrieving overall waiting time!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error on retrieving overall waiting time!", HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -26,15 +26,18 @@ public class Appointment {
     private Patient patient;
 
     @Column(name="startDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm",timezone = "Europe/Bucharest")
     private Date startDate;
 
     @Column(name = "endDate")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm",timezone = "Europe/Bucharest")
     private Date endDate;
 
-    @Column(name="description")
-    private String description;
+    @Column(name="notes")
+    private String notes;
+
+    @Column(name="title")
+    private String title;
 
 
     public Appointment() {
@@ -64,14 +67,6 @@ public class Appointment {
         this.endDate = endDate;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Doctor getDoctor() {
         return doctor;
     }
@@ -88,8 +83,25 @@ public class Appointment {
         this.patient = patient;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public String toString() {
         return "Appointment: no. " + id + " doctor: " + doctor + " patient: " + patient;
     }
+
 }

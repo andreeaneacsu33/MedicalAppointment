@@ -12,8 +12,11 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class AffiliationServiceImpl implements AffiliationService {
@@ -52,11 +55,24 @@ public class AffiliationServiceImpl implements AffiliationService {
     }
 
     @Override
-    public Affiliation findAffiliation(int idDoctor) {
-        Doctor doc = repoDoctor.findOne(idDoctor);
-        if (doc != null) {
-            return repoAffiliation.findOne(doc.getId());
-        }
-        return null;
+    public List<Affiliation> findAffiliations(int idDoctor) {
+        List<Affiliation> affiliations=new ArrayList<>();
+        repoAffiliation.getAll().forEach(affiliations::add);
+        return affiliations.stream().filter(affiliation->affiliation.getIdDoctor().getId()==idDoctor).collect(Collectors.toList());
     }
+
+    @Override
+    public List<String> findDistinctCities() {
+        List<Affiliation> affiliations=new ArrayList<>();
+        repoAffiliation.getAll().forEach(affiliations::add);
+        return affiliations.stream().map(Affiliation::getCity).distinct().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> findDistinctHospitals() {
+        List<Affiliation> affiliations=new ArrayList<>();
+        repoAffiliation.getAll().forEach(affiliations::add);
+        return affiliations.stream().map(Affiliation::getHospitalName).distinct().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
+    }
+
 }

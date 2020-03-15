@@ -1,25 +1,15 @@
 package com.project.model.dto;
 
-import java.util.Date;
-
 public class AppointmentDTO {
     private String idDoctor;
     private String idPatient;
     private String startDate;
     private String endDate;
-    private String description;
+    private String title;
+    private String notes;
 
 
     public AppointmentDTO() {
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getIdDoctor() {
@@ -52,6 +42,22 @@ public class AppointmentDTO {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     @Override

@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -40,12 +38,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             Appointment appointment=new Appointment();
             appointment.setDoctor(repoDoctor.findOne(Integer.parseInt(appointmentDTO.getIdDoctor())));
             appointment.setPatient(repoPatient.findOne(Integer.parseInt(appointmentDTO.getIdPatient())));
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            df.setTimeZone(TimeZone.getTimeZone("UTC+0200"));
             Date startDate=df.parse(appointmentDTO.getStartDate());
             Date endDate=df.parse(appointmentDTO.getEndDate());
             appointment.setStartDate(startDate);
             appointment.setEndDate(endDate);
-            appointment.setDescription(appointmentDTO.getDescription());
+            appointment.setTitle(appointmentDTO.getTitle());
+            appointment.setNotes(appointmentDTO.getNotes());
             return repoAppointment.save(appointment);
         }catch (Exception ex){
             ex.printStackTrace();
