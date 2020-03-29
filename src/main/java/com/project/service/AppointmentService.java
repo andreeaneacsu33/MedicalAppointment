@@ -8,5 +8,6 @@ import java.util.List;
 public interface AppointmentService {
     Appointment save(AppointmentDTO appointmentDTO);
     List<Appointment> findAppointments();
-    List<Appointment> findAppointments(int idDoctor);
+    List<Appointment> findDoctorAppointments(int idDoctor);
+    List<Appointment> findPatientAppointments(int idPatient);
 }

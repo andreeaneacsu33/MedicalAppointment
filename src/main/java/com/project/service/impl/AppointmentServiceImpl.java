@@ -2,6 +2,7 @@ package com.project.service.impl;
 
 import com.project.model.Appointment;
 import com.project.model.dto.AppointmentDTO;
+import com.project.persistence.impl.AffiliationRepository;
 import com.project.persistence.impl.AppointmentRepository;
 import com.project.persistence.impl.DoctorRepository;
 import com.project.persistence.impl.PatientRepository;
@@ -25,11 +26,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private final PatientRepository repoPatient;
 
+    private final AffiliationRepository repoAffiliaion;
+
     @Autowired
-    public AppointmentServiceImpl(AppointmentRepository repoAppointment, DoctorRepository repoDoctor, PatientRepository repoPatient) {
+    public AppointmentServiceImpl(AppointmentRepository repoAppointment, DoctorRepository repoDoctor, PatientRepository repoPatient, AffiliationRepository repoAffiliaion) {
         this.repoAppointment = repoAppointment;
         this.repoDoctor = repoDoctor;
         this.repoPatient = repoPatient;
+        this.repoAffiliaion = repoAffiliaion;
     }
 
     @Override
@@ -38,8 +42,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             Appointment appointment=new Appointment();
             appointment.setDoctor(repoDoctor.findOne(Integer.parseInt(appointmentDTO.getIdDoctor())));
             appointment.setPatient(repoPatient.findOne(Integer.parseInt(appointmentDTO.getIdPatient())));
+            appointment.setAffiliation(repoAffiliaion.findOneById(Integer.parseInt(appointmentDTO.getIdAffiliation())));
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            df.setTimeZone(TimeZone.getTimeZone("UTC+0200"));
             Date startDate=df.parse(appointmentDTO.getStartDate());
             Date endDate=df.parse(appointmentDTO.getEndDate());
             appointment.setStartDate(startDate);
@@ -61,9 +65,16 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> findAppointments(int idDoctor) {
+    public List<Appointment> findDoctorAppointments(int idDoctor) {
         List<Appointment> appointments=new ArrayList<>();
         repoAppointment.getAll().forEach(appointments::add);
         return appointments.stream().filter(app->app.getDoctor().getId()==idDoctor).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Appointment> findPatientAppointments(int idPatient) {
+        List<Appointment> appointments=new ArrayList<>();
+        repoAppointment.getAll().forEach(appointments::add);
+        return appointments.stream().filter(app->app.getPatient().getId()==idPatient).collect(Collectors.toList());
     }
 }

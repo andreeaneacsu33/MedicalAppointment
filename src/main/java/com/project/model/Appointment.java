@@ -25,6 +25,12 @@ public class Appointment {
     @JoinColumn(name="idPatient")
     private Patient patient;
 
+    @ManyToOne(cascade = {
+            CascadeType.MERGE,
+            CascadeType.PERSIST})
+    @JoinColumn(name="idAffiliation")
+    private Affiliation affiliation;
+
     @Column(name="startDate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm",timezone = "Europe/Bucharest")
     private Date startDate;
@@ -99,9 +105,16 @@ public class Appointment {
         this.title = title;
     }
 
+    public Affiliation getAffiliation() {
+        return affiliation;
+    }
+
+    public void setAffiliation(Affiliation affiliation) {
+        this.affiliation = affiliation;
+    }
+
     @Override
     public String toString() {
         return "Appointment: no. " + id + " doctor: " + doctor + " patient: " + patient;
     }
-
 }

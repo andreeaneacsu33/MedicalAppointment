@@ -15,7 +15,7 @@ public class AffiliationRepository {
 
     public Iterable<Affiliation> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Affiliation> affiliations=null;
+        List<Affiliation> affiliations;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{
@@ -71,6 +71,27 @@ public class AffiliationRepository {
         }
         return null;
     }
+
+    public Affiliation findOneById(int idAffiliation) {
+        sessionFactory= HibernateUtil.getSessionFactory();
+        Affiliation affiliation;
+        try(Session session=sessionFactory.openSession()){
+            Transaction trans=null;
+            try{
+                trans=session.beginTransaction();
+                affiliation=session.createNativeQuery("select * from affiliation where id like :idd",Affiliation.class).setParameter("idd",idAffiliation).getSingleResult();
+                System.out.println(affiliation);
+                return affiliation;
+            }catch (RuntimeException ex){
+                ex.printStackTrace();
+                if(trans!=null){
+                    trans.rollback();
+                }
+            }
+        }
+        return null;
+    }
+
 
     public Affiliation save(Affiliation affiliation) {
         sessionFactory= HibernateUtil.getSessionFactory();

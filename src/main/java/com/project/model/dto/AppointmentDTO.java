@@ -3,6 +3,7 @@ package com.project.model.dto;
 public class AppointmentDTO {
     private String idDoctor;
     private String idPatient;
+    private String idAffiliation;
     private String startDate;
     private String endDate;
     private String title;
@@ -58,6 +59,14 @@ public class AppointmentDTO {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getIdAffiliation() {
+        return idAffiliation;
+    }
+
+    public void setIdAffiliation(String idAffiliation) {
+        this.idAffiliation = idAffiliation;
     }
 
     @Override

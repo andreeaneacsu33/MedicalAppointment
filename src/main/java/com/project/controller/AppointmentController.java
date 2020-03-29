@@ -31,10 +31,20 @@ public class AppointmentController {
         }
     }
 
-    @RequestMapping(value = "/appointments/{idDoctor}",method = RequestMethod.GET)
-    public ResponseEntity<?> getAppointments(@PathVariable int idDoctor){
+    @RequestMapping(value = "/appointments/doctor/{idDoctor}",method = RequestMethod.GET)
+    public ResponseEntity<?> getDoctorAppointments(@PathVariable int idDoctor){
         try{
-            List<Appointment> appointments=appointmentService.findAppointments(idDoctor);
+            List<Appointment> appointments=appointmentService.findDoctorAppointments(idDoctor);
+            return new ResponseEntity<>(appointments, HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/appointments/patient/{idPatient}",method = RequestMethod.GET)
+    public ResponseEntity<?> getPatientAppointments(@PathVariable int idPatient){
+        try{
+            List<Appointment> appointments=appointmentService.findPatientAppointments(idPatient);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
