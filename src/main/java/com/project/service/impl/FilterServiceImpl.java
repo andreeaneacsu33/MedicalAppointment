@@ -17,14 +17,9 @@ import java.util.stream.Stream;
 @Service
 public class FilterServiceImpl implements FilterService {
 
-    private final AffiliationRepository repoAffiliation;
-    private static final int PAGE_SIZE=6;
-
-
     @Autowired
-    public FilterServiceImpl(AffiliationRepository repoAffiliation) {
-        this.repoAffiliation = repoAffiliation;
-    }
+    private AffiliationRepository repoAffiliation;
+    private static final int PAGE_SIZE=6;
 
     private List<Doctor> filterDoctorsFromCity(List<String> cities) {
         List<Affiliation> affiliations = new ArrayList<>();

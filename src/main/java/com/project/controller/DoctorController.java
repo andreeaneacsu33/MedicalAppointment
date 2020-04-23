@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -57,6 +58,26 @@ public class DoctorController {
             return new ResponseEntity<>(rating, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>("Error on retrieving overall rating!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/doctor/{idDoctor}/rating/statistics")
+    public ResponseEntity<?> findOverallRatingStatistics(@PathVariable int idDoctor){
+        try {
+            Map<Double,Integer> rating = doctorService.findOverallRatingStatistics(idDoctor);
+            return new ResponseEntity<>(rating, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Error on retrieving overall rating statistics!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/doctor/{idDoctor}/waiting-time/statistics")
+    public ResponseEntity<?> findOverallWaitingTimeStatistics(@PathVariable int idDoctor){
+        try {
+            Map<Integer,Integer> rating = doctorService.findOverallWaitingTimeStatistics(idDoctor);
+            return new ResponseEntity<>(rating, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Error on retrieving overall waiting time statistics!", HttpStatus.BAD_REQUEST);
         }
     }
 

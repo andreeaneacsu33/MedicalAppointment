@@ -10,19 +10,20 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
-    private final DoctorRepository repoDoctor;
-    private final ReviewRepository repoReview;
-    private static final int PAGE_SIZE=6;
     @Autowired
-    public DoctorServiceImpl(DoctorRepository repoDoctor, ReviewRepository repoReview) {
-        this.repoDoctor = repoDoctor;
-        this.repoReview = repoReview;
-    }
+    private DoctorRepository repoDoctor;
+
+    @Autowired
+    private ReviewRepository repoReview;
+
+    private static final int PAGE_SIZE=6;
 
     @Override
     public Doctor findDoctor(String username) {
@@ -48,6 +49,35 @@ public class DoctorServiceImpl implements DoctorService {
         repoReview.getAll(idDoctor).forEach(reviews::add);
         double averageRating=reviews.stream().mapToDouble(Review::getRating).average().orElse(5);
         return Double.parseDouble(new DecimalFormat("#.##").format(averageRating));
+    }
+
+    @Override
+    public Map<Double, Integer> findOverallRatingStatistics(int idDoctor) {
+        List<Review> reviews=new ArrayList<>();
+        repoReview.getAll(idDoctor).forEach(reviews::add);
+        Map<Double,Integer> ratings=new HashMap<>();
+        for(double i=0;i<=5;i+=0.5){
+            final double rate=i;
+            int count = (int)reviews.stream().filter(x->x.getRating()==rate).count();
+            ratings.put(i,count);
+        }
+        return ratings;
+    }
+
+    @Override
+    public Map<Integer, Integer> findOverallWaitingTimeStatistics(int idDoctor) {
+        List<Review> reviews=new ArrayList<>();
+        repoReview.getAll(idDoctor).forEach(reviews::add);
+        Map<Integer,Integer> ratings=new HashMap<>();
+        for(Review r:reviews){
+            Integer val = ratings.get(r.getWaitingTime());
+            if(ratings.containsKey(r.getWaitingTime())){
+                ratings.replace(r.getWaitingTime(),val+1);
+            }else{
+                ratings.put(r.getWaitingTime(),1);
+            }
+        }
+        return ratings;
     }
 
     @Override

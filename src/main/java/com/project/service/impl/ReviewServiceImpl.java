@@ -18,16 +18,15 @@ import java.util.List;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-    private final ReviewRepository repoReview;
-    private final DoctorRepository repoDoctor;
-    private final PatientRepository repoPatient;
+    @Autowired
+    private ReviewRepository repoReview;
 
     @Autowired
-    public ReviewServiceImpl(ReviewRepository repoReview, DoctorRepository repoDoctor, PatientRepository repoPatient) {
-        this.repoReview = repoReview;
-        this.repoDoctor = repoDoctor;
-        this.repoPatient = repoPatient;
-    }
+    private DoctorRepository repoDoctor;
+
+    @Autowired
+    private PatientRepository repoPatient;
+
 
     @Override
     public List<Review> findReviews(int idDoctor) {

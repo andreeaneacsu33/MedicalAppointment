@@ -41,13 +41,33 @@ public class AppointmentController {
         }
     }
 
-    @RequestMapping(value = "/appointments/patient/{idPatient}",method = RequestMethod.GET)
-    public ResponseEntity<?> getPatientAppointments(@PathVariable int idPatient){
+    @RequestMapping(value = "/appointments/doctor/{idDoctor}/date/{currentDate}",method = RequestMethod.GET)
+    public ResponseEntity<?> getDoctorAppointmentsWithDate(@PathVariable int idDoctor, @PathVariable String currentDate){
         try{
-            List<Appointment> appointments=appointmentService.findPatientAppointments(idPatient);
+            List<Appointment> appointments=appointmentService.findDoctorAppointmentsWithDate(idDoctor,currentDate);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/appointments/patient/{idPatient}/date/{currentDate}",method = RequestMethod.GET)
+    public ResponseEntity<?> getPatientAppointments(@PathVariable int idPatient, @PathVariable String currentDate){
+        try{
+            List<Appointment> appointments=appointmentService.findPatientAppointments(idPatient,currentDate);
+            return new ResponseEntity<>(appointments, HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/appointment/{idAppointment}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeAppointment(@PathVariable int idAppointment){
+        try{
+            Appointment appointment=appointmentService.removeAppointment(idAppointment);
+            return new ResponseEntity<>(appointment,HttpStatus.OK);
+        }catch (Exception ex){
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

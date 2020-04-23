@@ -1,5 +1,6 @@
 package com.project.persistence.impl;
 
+import com.project.model.Affiliation;
 import com.project.model.Appointment;
 import com.project.persistence.util.HibernateUtil;
 import org.hibernate.Session;
@@ -15,7 +16,7 @@ public class AppointmentRepository {
 
     public Iterable<Appointment> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Appointment> appointments=null;
+        List<Appointment> appointments;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{
@@ -39,6 +40,43 @@ public class AppointmentRepository {
             try{
                 trans=session.beginTransaction();
                 session.save(appointment);
+                return appointment;
+            }catch (RuntimeException ex){
+                ex.printStackTrace();
+                if(trans!=null){
+                    trans.rollback();
+                }
+            }
+        }
+        return null;
+    }
+
+    public void delete(Appointment appointment) {
+        sessionFactory=HibernateUtil.getSessionFactory();
+        try(Session session=sessionFactory.openSession()){
+            Transaction trans=null;
+            try{
+                trans=session.beginTransaction();
+                session.delete(appointment);
+                trans.commit();
+            }catch (RuntimeException e){
+                e.printStackTrace();
+                if(trans!=null){
+                    trans.rollback();
+                }
+            }
+        }
+    }
+
+    public Appointment findOne(int idAppointment) {
+        sessionFactory= HibernateUtil.getSessionFactory();
+        Appointment appointment;
+        try(Session session=sessionFactory.openSession()){
+            Transaction trans=null;
+            try{
+                trans=session.beginTransaction();
+                appointment=session.createNativeQuery("select * from appointment where id like :idd",Appointment.class).setParameter("idd",idAppointment).getSingleResult();
+                System.out.println(appointment);
                 return appointment;
             }catch (RuntimeException ex){
                 ex.printStackTrace();

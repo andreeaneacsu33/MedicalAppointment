@@ -9,6 +9,10 @@ import com.project.persistence.impl.PatientRepository;
 import com.project.persistence.impl.SpecialtyRepository;
 import com.project.persistence.impl.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +20,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessageRemovedException;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,8 +31,6 @@ import java.util.logging.Logger;
 
 @Service(value = "service")
 public class UserServiceImpl implements com.project.service.UserService, UserDetailsService {
-
-    final static Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
     @Autowired
     private DoctorRepository repoDoctor;
@@ -41,6 +46,9 @@ public class UserServiceImpl implements com.project.service.UserService, UserDet
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    public JavaMailSender emailSender;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -94,7 +102,33 @@ public class UserServiceImpl implements com.project.service.UserService, UserDet
                 default:
                     break;
         }
-        return repoUser.save(user1);
+        User saved=repoUser.save(user1);
+        sendEmail(user);
+        return saved;
+    }
+
+    private void sendEmail(UserDTO user){
+        try {
+            MimeMessage message=emailSender.createMimeMessage();
+            MimeMessageHelper helper=new MimeMessageHelper(message,true);
+            helper.setTo(user.getEmail());
+            helper.setSubject("User successfully created");
+            String text="<h2>\n" +
+                    "Welcome to MyDOC!\n" +
+                    "</h2>\n" +
+                    "<span>\n" +
+                    "Thank you for signing up to MyDOC! Hi "+ user.getFirstName()+" "+user.getLastName()+ ", we’re glad you’re here! You can book new appointments, review your experience and many more. Let's make a difference in the medical appointment system!\n" +
+                    "</span>\n" +
+                    "<br/>\n" +
+                    "<h4>\n" +
+                    "MyDOC team\n" +
+                    "</h4>";
+            message.setText(text);
+            emailSender.send(message);
+            System.out.println("Email successfully sent!");
+        } catch (MessagingException exception ) {
+            exception.printStackTrace();
+        }
     }
 
     @Override

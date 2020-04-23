@@ -20,14 +20,12 @@ import java.util.stream.Stream;
 
 @Service
 public class AffiliationServiceImpl implements AffiliationService {
-    private final AffiliationRepository repoAffiliation;
-    private final DoctorRepository repoDoctor;
 
     @Autowired
-    public AffiliationServiceImpl(AffiliationRepository repoAffiliation, DoctorRepository repoDoctor) {
-        this.repoAffiliation = repoAffiliation;
-        this.repoDoctor = repoDoctor;
-    }
+    private AffiliationRepository repoAffiliation;
+
+    @Autowired
+    private DoctorRepository repoDoctor;
 
     @Override
     public List<Affiliation> findAffiliations() {

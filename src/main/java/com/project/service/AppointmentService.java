@@ -9,5 +9,7 @@ public interface AppointmentService {
     Appointment save(AppointmentDTO appointmentDTO);
     List<Appointment> findAppointments();
     List<Appointment> findDoctorAppointments(int idDoctor);
-    List<Appointment> findPatientAppointments(int idPatient);
+    List<Appointment> findDoctorAppointmentsWithDate(int idDoctor,String currentDate);
+    List<Appointment> findPatientAppointments(int idPatient,String currentDate);
+    Appointment removeAppointment(int id);
 }

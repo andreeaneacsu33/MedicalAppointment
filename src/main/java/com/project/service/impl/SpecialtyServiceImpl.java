@@ -12,12 +12,8 @@ import java.util.List;
 @Service
 public class SpecialtyServiceImpl implements SpecialtyService {
 
-    private final SpecialtyRepository repoSpecialty;
-
     @Autowired
-    public SpecialtyServiceImpl(SpecialtyRepository repoSpecialty) {
-        this.repoSpecialty = repoSpecialty;
-    }
+    private SpecialtyRepository repoSpecialty;
 
     @Override
     public List<Specialty> findSpecialties() {

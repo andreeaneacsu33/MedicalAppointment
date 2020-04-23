@@ -14,15 +14,12 @@ import java.util.List;
 
 @Service
 public class QualificationServiceImpl implements QualificationService {
-    private final QualificationRepository repoQualification;
-    private final DoctorRepository repoDoctor;
 
     @Autowired
-    public QualificationServiceImpl(QualificationRepository repoQualification, DoctorRepository repoDoctor) {
-        this.repoQualification = repoQualification;
-        this.repoDoctor = repoDoctor;
-    }
+    private QualificationRepository repoQualification;
 
+    @Autowired
+    private DoctorRepository repoDoctor;
 
     @Override
     public List<Qualification> findQualifications() {
