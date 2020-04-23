@@ -1,5 +1,7 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Review;
 import com.project.model.dto.ReviewDTO;
 import com.project.persistence.impl.DoctorRepository;
@@ -17,6 +19,8 @@ import java.util.List;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
     private ReviewRepository repoReview;

@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Affiliation;
 import com.project.model.Qualification;
 import com.project.model.dto.QualificationDTO;
@@ -9,22 +11,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class QualificationController {
-    private final QualificationServiceImpl qualificationService;
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
-    public QualificationController(QualificationServiceImpl qualificationService) {
-        this.qualificationService = qualificationService;
-    }
+    private QualificationServiceImpl qualificationService;
 
     @RequestMapping(value = "/qualification",method = RequestMethod.POST)
     public ResponseEntity<?> saveQualification(@RequestBody QualificationDTO qualificationDTO){
         try{
             Qualification qualification=qualificationService.save(qualificationDTO);
-            return new ResponseEntity<Qualification>(qualification, HttpStatus.OK);
+            return new ResponseEntity<>(qualification, HttpStatus.OK);
         }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Save qualification failed with message: {0}",ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -33,8 +37,9 @@ public class QualificationController {
     public ResponseEntity<?> getQualification(@PathVariable int idDoctor){
         try{
             Qualification qualification=qualificationService.findQualification(idDoctor);
-            return new ResponseEntity<Qualification>(qualification, HttpStatus.OK);
+            return new ResponseEntity<>(qualification, HttpStatus.OK);
         }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve doctor's qualification failed with message: {0}",ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }

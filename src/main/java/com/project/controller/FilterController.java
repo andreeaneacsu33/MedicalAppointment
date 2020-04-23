@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Doctor;
 import com.project.service.impl.FilterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +16,10 @@ import java.util.List;
 @RestController
 public class FilterController {
 
-    private final FilterServiceImpl filterService;
-
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
-    public FilterController(FilterServiceImpl filterService) {
-        this.filterService = filterService;
-    }
+    private FilterServiceImpl filterService;
 
     @RequestMapping(value = "/doctors/filter/cities/{cities}/total")
     public ResponseEntity<?> findTotalPagesForCitiesFilter(@PathVariable String[] cities){

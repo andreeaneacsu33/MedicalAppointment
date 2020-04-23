@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Specialty;
 import com.project.service.impl.SpecialtyServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,11 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class SpecialtyController {
-    private final SpecialtyServiceImpl specialtyService;
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
-    public SpecialtyController(SpecialtyServiceImpl specialtyService) {
-        this.specialtyService = specialtyService;
-    }
+    private SpecialtyServiceImpl specialtyService;
 
     @GetMapping({"/specialties"})
     public ResponseEntity<List<Specialty>> getAllEpisodes(){
@@ -29,8 +30,8 @@ public class SpecialtyController {
     public ResponseEntity<?> getSpecialty(@PathVariable int id){
         Specialty specialty= specialtyService.findSpecialty(id);
         if(specialty==null){
-            return new ResponseEntity<String>("Not found!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found!", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Specialty>(specialty,HttpStatus.OK);
+        return new ResponseEntity<>(specialty,HttpStatus.OK);
     }
 }

@@ -1,5 +1,7 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Doctor;
 import com.project.model.Patient;
 import com.project.model.User;
@@ -27,10 +29,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 @Service(value = "service")
 public class UserServiceImpl implements com.project.service.UserService, UserDetailsService {
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
     private DoctorRepository repoDoctor;

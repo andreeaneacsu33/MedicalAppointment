@@ -1,5 +1,7 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Doctor;
 import com.project.model.Qualification;
 import com.project.model.dto.QualificationDTO;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class QualificationServiceImpl implements QualificationService {
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
     private QualificationRepository repoQualification;

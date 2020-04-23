@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.User;
 import com.project.model.dto.UserDTO;
 import com.project.security.AuthToken;
@@ -21,6 +23,9 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class UserController {
+
+    private AbstractLogger logger = Logger.getLogger();
+
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -41,9 +46,9 @@ public class UserController {
     public ResponseEntity<?> getUser(@PathVariable String email){
         User user= service.findUser(email);
         if(user==null){
-            return new ResponseEntity<String>("Not found!",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Not found!",HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(user,HttpStatus.OK);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @RequestMapping(value="/signup", method = RequestMethod.POST)
@@ -51,7 +56,7 @@ public class UserController {
         try{
             User user=service.save(userDTO);
             if(user==null){
-                return new ResponseEntity<String>("Email already in use!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("Email already in use!", HttpStatus.BAD_REQUEST);
             }
             final Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

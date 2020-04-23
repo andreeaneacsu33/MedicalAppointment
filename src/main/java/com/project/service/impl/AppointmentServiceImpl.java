@@ -1,5 +1,7 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Appointment;
 import com.project.model.dto.AppointmentDTO;
 import com.project.persistence.impl.AffiliationRepository;
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
+
+    private AbstractLogger logger = Logger.getLogger();
+
     @Autowired
     private AppointmentRepository repoAppointment;
 

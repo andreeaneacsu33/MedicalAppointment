@@ -1,5 +1,7 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Doctor;
 import com.project.model.Review;
 import com.project.persistence.impl.DoctorRepository;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 @Service
 public class DoctorServiceImpl implements DoctorService {
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
     private DoctorRepository repoDoctor;

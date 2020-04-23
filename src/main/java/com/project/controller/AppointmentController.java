@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Appointment;
 import com.project.model.dto.AppointmentDTO;
 import com.project.service.impl.AppointmentServiceImpl;
@@ -8,18 +10,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class AppointmentController {
 
-    private final AppointmentServiceImpl appointmentService;
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
-    public AppointmentController(AppointmentServiceImpl appointmentService) {
-        this.appointmentService = appointmentService;
-    }
+    private AppointmentServiceImpl appointmentService;
 
     @RequestMapping(value = "/appointment",method = RequestMethod.POST)
     public ResponseEntity<?> saveAppointment(@RequestBody AppointmentDTO appointmentDTO){
@@ -27,6 +28,7 @@ public class AppointmentController {
             Appointment appointment=appointmentService.save(appointmentDTO);
             return new ResponseEntity<>(appointment, HttpStatus.OK);
         }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Save appointment failed with message: {0}",ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -37,6 +39,7 @@ public class AppointmentController {
             List<Appointment> appointments=appointmentService.findDoctorAppointments(idDoctor);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve doctor's appointments failed with message: {0}",ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -47,6 +50,7 @@ public class AppointmentController {
             List<Appointment> appointments=appointmentService.findDoctorAppointmentsWithDate(idDoctor,currentDate);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve doctor's appointments on date failed with message: {0}",ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -57,6 +61,7 @@ public class AppointmentController {
             List<Appointment> appointments=appointmentService.findPatientAppointments(idPatient,currentDate);
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve patient's appointments on date failed with message: {0}",ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -67,6 +72,7 @@ public class AppointmentController {
             Appointment appointment=appointmentService.removeAppointment(idAppointment);
             return new ResponseEntity<>(appointment,HttpStatus.OK);
         }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Remove appointment failed with message: {0}",ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,5 +1,7 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Specialty;
 import com.project.persistence.impl.SpecialtyRepository;
 import com.project.service.SpecialtyService;
@@ -12,6 +14,8 @@ import java.util.List;
 @Service
 public class SpecialtyServiceImpl implements SpecialtyService {
 
+    private AbstractLogger logger = Logger.getLogger();
+
     @Autowired
     private SpecialtyRepository repoSpecialty;
 
@@ -19,6 +23,7 @@ public class SpecialtyServiceImpl implements SpecialtyService {
     public List<Specialty> findSpecialties() {
         List<Specialty> specialties=new ArrayList<>();
         repoSpecialty.getAll().forEach(specialties::add);
+        logger.log(AbstractLogger.INFO,"Retrieve all specialties.");
         return specialties;
     }
 

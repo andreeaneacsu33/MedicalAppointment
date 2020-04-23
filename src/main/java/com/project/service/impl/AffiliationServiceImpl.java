@@ -1,7 +1,8 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Affiliation;
-import com.project.model.Doctor;
 import com.project.model.dto.AffiliationDTO;
 import com.project.persistence.impl.AffiliationRepository;
 import com.project.persistence.impl.DoctorRepository;
@@ -16,10 +17,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class AffiliationServiceImpl implements AffiliationService {
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
     private AffiliationRepository repoAffiliation;
@@ -31,6 +33,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<Affiliation> findAffiliations() {
         List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
+
         return affiliations;
     }
 
@@ -56,6 +59,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<Affiliation> findAffiliations(int idDoctor) {
         List<Affiliation> affiliations=new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
+        logger.log(AbstractLogger.INFO,"Retrieve all affiliations");
         return affiliations.stream().filter(affiliation->affiliation.getIdDoctor().getId()==idDoctor).collect(Collectors.toList());
     }
 

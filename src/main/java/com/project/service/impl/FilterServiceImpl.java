@@ -1,5 +1,7 @@
 package com.project.service.impl;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Affiliation;
 import com.project.model.Doctor;
 import com.project.persistence.impl.AffiliationRepository;
@@ -16,6 +18,8 @@ import java.util.stream.Stream;
 
 @Service
 public class FilterServiceImpl implements FilterService {
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
     private AffiliationRepository repoAffiliation;

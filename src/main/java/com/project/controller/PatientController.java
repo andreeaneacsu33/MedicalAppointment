@@ -1,5 +1,7 @@
 package com.project.controller;
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Patient;
 import com.project.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,22 +9,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class PatientController {
-    private final PatientService patientService;
+
+    private AbstractLogger logger = Logger.getLogger();
 
     @Autowired
-    public PatientController(PatientService patientService) {
-        this.patientService = patientService;
-    }
+    private PatientService patientService;
 
     @RequestMapping(value = "/patient/{email}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable String email){
         Patient patient= patientService.findPatient(email);
         if(patient==null){
-            return new ResponseEntity<String>("Not found!", HttpStatus.NOT_FOUND);
+            logger.log(AbstractLogger.ERROR, "Retrieve patient failed");
+            return new ResponseEntity<>("Not found!", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Patient>(patient,HttpStatus.OK);
+        return new ResponseEntity<>(patient,HttpStatus.OK);
     }
 }
