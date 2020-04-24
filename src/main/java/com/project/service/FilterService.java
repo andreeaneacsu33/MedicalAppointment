@@ -1,7 +1,6 @@
 package com.project.service;
 
 import com.project.model.Doctor;
-import com.project.service.util.FilterType;
 
 import java.util.List;
 
