@@ -43,8 +43,8 @@ public class QualificationServiceImpl implements QualificationService {
     }
 
     @Override
-    public Qualification findQualification(int idDocotor) {
-        Doctor doc=repoDoctor.findOne(idDocotor);
+    public Qualification findQualification(int idDoctor) {
+        Doctor doc=repoDoctor.findOne(idDoctor);
         if(doc!=null){
             return repoQualification.findOne(doc.getId());
         }

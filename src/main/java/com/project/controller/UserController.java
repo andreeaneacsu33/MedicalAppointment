@@ -56,7 +56,7 @@ public class UserController {
         try{
             User user=service.save(userDTO);
             if(user==null){
-                return new ResponseEntity<>("Email already in use!", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>("IEmail already in use!", HttpStatus.BAD_REQUEST);
             }
             final Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

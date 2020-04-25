@@ -1,17 +1,24 @@
 package com.project.service.impl;
 
+import com.project.decorator.*;
 import com.project.logging.AbstractLogger;
 import com.project.logging.Logger;
 import com.project.model.Appointment;
+import com.project.model.Email;
+import com.project.model.Patient;
+import com.project.model.User;
 import com.project.model.dto.AppointmentDTO;
-import com.project.persistence.impl.AffiliationRepository;
-import com.project.persistence.impl.AppointmentRepository;
-import com.project.persistence.impl.DoctorRepository;
-import com.project.persistence.impl.PatientRepository;
+import com.project.model.dto.UserDTO;
+import com.project.persistence.impl.*;
 import com.project.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Predicate;
@@ -32,8 +39,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     private PatientRepository repoPatient;
 
     @Autowired
+    private UserRepository repoUser;
+
+    @Autowired
     private AffiliationRepository repoAffiliaion;
 
+    @Autowired
+    public JavaMailSender emailSender;
 
     @Override
     public Appointment save(AppointmentDTO appointmentDTO) {
@@ -49,7 +61,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointment.setEndDate(endDate);
             appointment.setTitle(appointmentDTO.getTitle());
             appointment.setNotes(appointmentDTO.getNotes());
-            return repoAppointment.save(appointment);
+            Appointment appointmentSaved=repoAppointment.save(appointment);
+            sendEmail(appointment.getPatient(),appointmentSaved);
+            return appointmentSaved;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -113,5 +127,22 @@ public class AppointmentServiceImpl implements AppointmentService {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    private void sendEmail(Patient patient, Appointment appointment){
+        try {
+            MimeMessage message=emailSender.createMimeMessage();
+            MimeMessageHelper helper=new MimeMessageHelper(message,true);
+            IEmail email=new AppointmentEmailDecorator(new EmailImpl(),patient,appointment);
+            Email emailContent=email.getEmail();
+            helper.setTo(emailContent.getTo());
+            helper.setSubject(emailContent.getSubject());
+            message.setContent(emailContent.getText(),"text/html");
+            emailSender.send(message);
+            System.out.println("Email successfully sent!");
+        } catch (MessagingException ex) {
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Send email failed with message: {0}",ex.getMessage()));
+            ex.printStackTrace();
+        }
     }
 }

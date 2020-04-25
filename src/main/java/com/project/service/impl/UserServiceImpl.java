@@ -1,8 +1,12 @@
 package com.project.service.impl;
 
+import com.project.decorator.EmailImpl;
+import com.project.decorator.IEmail;
+import com.project.decorator.RegisterEmailDecorator;
 import com.project.logging.AbstractLogger;
 import com.project.logging.Logger;
 import com.project.model.Doctor;
+import com.project.model.Email;
 import com.project.model.Patient;
 import com.project.model.User;
 import com.project.model.dto.UserDTO;
@@ -114,21 +118,13 @@ public class UserServiceImpl implements com.project.service.UserService, UserDet
         try {
             MimeMessage message=emailSender.createMimeMessage();
             MimeMessageHelper helper=new MimeMessageHelper(message,true);
-            helper.setTo(user.getEmail());
-            helper.setSubject("User successfully created");
-            String text="<h2>\n" +
-                    "Welcome to MyDOC!\n" +
-                    "</h2>\n" +
-                    "<span>\n" +
-                    "Thank you for signing up to MyDOC! Hi "+ user.getFirstName()+" "+user.getLastName()+ ", we’re glad you’re here! You can book new appointments, review your experience and many more. Let's make a difference in the medical appointment system!\n" +
-                    "</span>\n" +
-                    "<br/>\n" +
-                    "<h4>\n" +
-                    "MyDOC team\n" +
-                    "</h4>";
-            message.setText(text);
+            IEmail email=new RegisterEmailDecorator(new EmailImpl(),user);
+            Email emailContent=email.getEmail();
+            helper.setTo(emailContent.getTo());
+            helper.setSubject(emailContent.getSubject());
+            message.setContent(emailContent.getText(),"text/html");
             emailSender.send(message);
-            System.out.println("Email successfully sent!");
+            logger.log(AbstractLogger.INFO, "Email successfully sent!");
         } catch (MessagingException exception ) {
             exception.printStackTrace();
         }

@@ -53,7 +53,6 @@ public class FilterServiceImpl implements FilterService {
         return new ArrayList<>(Arrays.asList(vector));
     }
 
-
     @Override
     public int findTotalPagesForCityFilter(String[] cities) {
         List<String> cityList=convertVectorToList(cities);
