@@ -39,10 +39,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private PatientRepository repoPatient;
 
     @Autowired
-    private UserRepository repoUser;
-
-    @Autowired
-    private AffiliationRepository repoAffiliaion;
+    private AffiliationRepository repoAffiliation;
 
     @Autowired
     public JavaMailSender emailSender;
@@ -53,7 +50,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             Appointment appointment = new Appointment();
             appointment.setDoctor(repoDoctor.findOne(Integer.parseInt(appointmentDTO.getIdDoctor())));
             appointment.setPatient(repoPatient.findOne(Integer.parseInt(appointmentDTO.getIdPatient())));
-            appointment.setAffiliation(repoAffiliaion.findOneById(Integer.parseInt(appointmentDTO.getIdAffiliation())));
+            appointment.setAffiliation(repoAffiliation.findOneById(Integer.parseInt(appointmentDTO.getIdAffiliation())));
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             Date startDate = df.parse(appointmentDTO.getStartDate());
             Date endDate = df.parse(appointmentDTO.getEndDate());

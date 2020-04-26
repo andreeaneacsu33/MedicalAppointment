@@ -1,13 +1,14 @@
 package com.project.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.service.adapter.ModelObject;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name="review")
-public class Review {
+public class Review implements ModelObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

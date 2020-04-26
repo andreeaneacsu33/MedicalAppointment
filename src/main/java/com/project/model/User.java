@@ -1,5 +1,6 @@
 package com.project.model;
 
+import com.project.service.adapter.ModelObject;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "user")
-public class User implements Serializable {
+public class User implements Serializable, ModelObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

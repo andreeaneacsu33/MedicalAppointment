@@ -15,6 +15,7 @@ import com.project.persistence.impl.DoctorRepository;
 import com.project.persistence.impl.PatientRepository;
 import com.project.persistence.impl.ReviewRepository;
 import com.project.service.ReviewService;
+import com.project.service.adapter.ReviewObjectAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -55,44 +56,31 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review save(ReviewDTO reviewDTO) {
-        try {
-            Review review = new Review();
-            review.setIdPatient(repoPatient.findOne(reviewDTO.getPatientEmail()));
-            review.setIdDoctor(repoDoctor.findOne(reviewDTO.getDoctorEmail()));
-            review.setDescription(reviewDTO.getDescription());
-            review.setRating(reviewDTO.getRating());
-            review.setWaitingTime(reviewDTO.getWaitingTime());
-            SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
-            Date reviewDate = df.parse(reviewDTO.getReviewDate());
-            review.setReviewDate(reviewDate);
-            review.setRecommend(reviewDTO.getRecommend());
-            Review reviewSaved=repoReview.save(review);
-            sendEmail(review.getIdPatient(),reviewSaved);
-            return reviewSaved;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+        ReviewObjectAdapter reviewObjectAdapter = new ReviewObjectAdapter(repoDoctor, repoPatient);
+        Review review = (Review) reviewObjectAdapter.convertFromClientToModel(reviewDTO);
+        Review reviewSaved = repoReview.save(review);
+        sendEmail(review.getIdPatient(), reviewSaved);
+        return reviewSaved;
     }
 
-    private void sendEmail(Patient patient,Review review){
+    private void sendEmail(Patient patient, Review review) {
         try {
-            MimeMessage message=emailSender.createMimeMessage();
-            MimeMessageHelper helper=new MimeMessageHelper(message,true);
-            IEmail email=new ReviewEmailDecorator(new EmailImpl(),patient,review);
-            Email emailContent=email.getEmail();
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            IEmail email = new ReviewEmailDecorator(new EmailImpl(), patient, review);
+            Email emailContent = email.getEmail();
             helper.setTo(emailContent.getTo());
             helper.setSubject(emailContent.getSubject());
-            message.setContent(emailContent.getText(),"text/html");
+            message.setContent(emailContent.getText(), "text/html");
             emailSender.send(message);
             logger.log(AbstractLogger.INFO, "Email successfully sent!");
-        } catch (MessagingException exception ) {
+        } catch (MessagingException exception) {
             exception.printStackTrace();
         }
     }
 
     @Override
-    public Review findReview(int idPatient,int idDoctor) {
-        return repoReview.findOne(idPatient,idDoctor);
+    public Review findReview(int idPatient, int idDoctor) {
+        return repoReview.findOne(idPatient, idDoctor);
     }
 }

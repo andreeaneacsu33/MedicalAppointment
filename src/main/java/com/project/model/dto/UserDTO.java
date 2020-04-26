@@ -1,6 +1,8 @@
 package com.project.model.dto;
 
-public class UserDTO {
+import com.project.service.adapter.ClientObject;
+
+public class UserDTO implements ClientObject {
     private String email;
     private String password;
     private String firstName;

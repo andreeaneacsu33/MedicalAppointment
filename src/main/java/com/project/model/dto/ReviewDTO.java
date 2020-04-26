@@ -1,6 +1,8 @@
 package com.project.model.dto;
 
-public class ReviewDTO {
+import com.project.service.adapter.ClientObject;
+
+public class ReviewDTO implements ClientObject {
     private String patientEmail;
     private String doctorEmail;
     private String description;
