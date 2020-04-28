@@ -1,6 +1,8 @@
 package com.project.model.dto;
 
-public class QualificationDTO {
+import com.project.service.adapter.ClientObject;
+
+public class QualificationDTO implements ClientObject {
     private String email;
     private String title;
     private String institute;

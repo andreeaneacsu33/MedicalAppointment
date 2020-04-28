@@ -8,6 +8,7 @@ import com.project.model.dto.QualificationDTO;
 import com.project.persistence.impl.DoctorRepository;
 import com.project.persistence.impl.QualificationRepository;
 import com.project.service.QualificationService;
+import com.project.service.adapter.QualificationObjectAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,8 @@ public class QualificationServiceImpl implements QualificationService {
 
     @Override
     public Qualification save(QualificationDTO qDTO) {
-        Qualification qualification=new Qualification();
-        qualification.setIdDoctor(repoDoctor.findOne(qDTO.getEmail()));
-        qualification.setTitle(qDTO.getTitle());
-        qualification.setInstitute(qDTO.getInstitute());
-        qualification.setGraduationYear(qDTO.getGraduationYear());
+        QualificationObjectAdapter qualificationObjectAdapter=new QualificationObjectAdapter(repoDoctor);
+        Qualification qualification=(Qualification)qualificationObjectAdapter.convertFromClientToModel(qDTO);
         return repoQualification.save(qualification);
     }
 

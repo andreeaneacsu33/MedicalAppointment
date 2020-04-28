@@ -11,6 +11,7 @@ import com.project.model.dto.AppointmentDTO;
 import com.project.model.dto.UserDTO;
 import com.project.persistence.impl.*;
 import com.project.service.AppointmentService;
+import com.project.service.adapter.AppointmentObjectAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -46,25 +47,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment save(AppointmentDTO appointmentDTO) {
-        try {
-            Appointment appointment = new Appointment();
-            appointment.setDoctor(repoDoctor.findOne(Integer.parseInt(appointmentDTO.getIdDoctor())));
-            appointment.setPatient(repoPatient.findOne(Integer.parseInt(appointmentDTO.getIdPatient())));
-            appointment.setAffiliation(repoAffiliation.findOneById(Integer.parseInt(appointmentDTO.getIdAffiliation())));
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            Date startDate = df.parse(appointmentDTO.getStartDate());
-            Date endDate = df.parse(appointmentDTO.getEndDate());
-            appointment.setStartDate(startDate);
-            appointment.setEndDate(endDate);
-            appointment.setTitle(appointmentDTO.getTitle());
-            appointment.setNotes(appointmentDTO.getNotes());
-            Appointment appointmentSaved=repoAppointment.save(appointment);
-            sendEmail(appointment.getPatient(),appointmentSaved);
-            return appointmentSaved;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        AppointmentObjectAdapter aoAdapter = new AppointmentObjectAdapter(repoAffiliation, repoDoctor, repoPatient);
+        Appointment appointment = (Appointment) aoAdapter.convertFromClientToModel(appointmentDTO);
+        Appointment appointmentSaved = repoAppointment.save(appointment);
+        sendEmail(appointment.getPatient(), appointmentSaved);
+        return appointmentSaved;
     }
 
     @Override
@@ -89,11 +76,11 @@ public class AppointmentServiceImpl implements AppointmentService {
             Date current = df.parse(currentDate);
             repoAppointment.getAll().forEach(appointments::add);
             return appointments.stream().filter(app -> app.getDoctor().getId() == idDoctor &&
-                    app.getStartDate().getYear()==current.getYear() &&
-                    app.getStartDate().getDate()==current.getDate() &&
-                    app.getStartDate().getMonth()==current.getMonth() &&
-                    app.getStartDate().getTime()>current.getTime()).collect(Collectors.toList());
-        }catch (Exception ex){
+                    app.getStartDate().getYear() == current.getYear() &&
+                    app.getStartDate().getDate() == current.getDate() &&
+                    app.getStartDate().getMonth() == current.getMonth() &&
+                    app.getStartDate().getTime() > current.getTime()).collect(Collectors.toList());
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
@@ -107,8 +94,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             df.setTimeZone(TimeZone.getTimeZone("UTC+0300"));
             Date current = df.parse(currentDate);
             repoAppointment.getAll().forEach(appointments::add);
-            return appointments.stream().filter(app -> app.getPatient().getId() == idPatient && app.getStartDate().compareTo(current)>0).collect(Collectors.toList());
-        }catch (Exception ex){
+            return appointments.stream().filter(app -> app.getPatient().getId() == idPatient && app.getStartDate().compareTo(current) > 0).collect(Collectors.toList());
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
@@ -116,29 +103,29 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Appointment removeAppointment(int id) {
-        try{
-            Appointment appointment=repoAppointment.findOne(id);
+        try {
+            Appointment appointment = repoAppointment.findOne(id);
             repoAppointment.delete(appointment);
             return appointment;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    private void sendEmail(Patient patient, Appointment appointment){
+    private void sendEmail(Patient patient, Appointment appointment) {
         try {
-            MimeMessage message=emailSender.createMimeMessage();
-            MimeMessageHelper helper=new MimeMessageHelper(message,true);
-            IEmail email=new AppointmentEmailDecorator(new EmailImpl(),patient,appointment);
-            Email emailContent=email.getEmail();
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            IEmail email = new AppointmentEmailDecorator(new EmailImpl(), patient, appointment);
+            Email emailContent = email.getEmail();
             helper.setTo(emailContent.getTo());
             helper.setSubject(emailContent.getSubject());
-            message.setContent(emailContent.getText(),"text/html");
+            message.setContent(emailContent.getText(), "text/html");
             emailSender.send(message);
             System.out.println("Email successfully sent!");
         } catch (MessagingException ex) {
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Send email failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Send email failed with message: {0}", ex.getMessage()));
             ex.printStackTrace();
         }
     }

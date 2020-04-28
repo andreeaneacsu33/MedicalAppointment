@@ -1,6 +1,8 @@
 package com.project.model.dto;
 
-public class AppointmentDTO {
+import com.project.service.adapter.ClientObject;
+
+public class AppointmentDTO implements ClientObject {
     private String idDoctor;
     private String idPatient;
     private String idAffiliation;

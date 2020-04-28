@@ -1,10 +1,12 @@
 package com.project.model;
 
+import com.project.service.adapter.ModelObject;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="qualification")
-public class Qualification {
+public class Qualification implements ModelObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

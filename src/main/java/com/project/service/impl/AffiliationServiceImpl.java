@@ -7,6 +7,7 @@ import com.project.model.dto.AffiliationDTO;
 import com.project.persistence.impl.AffiliationRepository;
 import com.project.persistence.impl.DoctorRepository;
 import com.project.service.AffiliationService;
+import com.project.service.adapter.AffiliationObjectAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,40 +40,29 @@ public class AffiliationServiceImpl implements AffiliationService {
 
     @Override
     public Affiliation save(AffiliationDTO affiliationDTO) {
-        try {
-            Affiliation affiliation = new Affiliation();
-            affiliation.setIdDoctor(repoDoctor.findOne(affiliationDTO.getEmail()));
-            affiliation.setCity(affiliationDTO.getCity());
-            affiliation.setCountry(affiliationDTO.getCountry());
-            affiliation.setHospitalName(affiliationDTO.getHospitalName());
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = df.parse(affiliationDTO.getStartDate());
-            affiliation.setStartDate(startDate);
-            return repoAffiliation.save(affiliation);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+        AffiliationObjectAdapter affiliationObjectAdapter = new AffiliationObjectAdapter(repoDoctor);
+        Affiliation affiliation = (Affiliation) affiliationObjectAdapter.convertFromClientToModel(affiliationDTO);
+        return repoAffiliation.save(affiliation);
     }
 
     @Override
     public List<Affiliation> findAffiliations(int idDoctor) {
-        List<Affiliation> affiliations=new ArrayList<>();
+        List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
-        logger.log(AbstractLogger.INFO,"Retrieve all affiliations");
-        return affiliations.stream().filter(affiliation->affiliation.getIdDoctor().getId()==idDoctor).collect(Collectors.toList());
+        logger.log(AbstractLogger.INFO, "Retrieve all affiliations");
+        return affiliations.stream().filter(affiliation -> affiliation.getIdDoctor().getId() == idDoctor).collect(Collectors.toList());
     }
 
     @Override
     public List<String> findDistinctCities() {
-        List<Affiliation> affiliations=new ArrayList<>();
+        List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
         return affiliations.stream().map(Affiliation::getCity).distinct().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
     }
 
     @Override
     public List<String> findDistinctHospitals() {
-        List<Affiliation> affiliations=new ArrayList<>();
+        List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
         return affiliations.stream().map(Affiliation::getHospitalName).distinct().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
     }

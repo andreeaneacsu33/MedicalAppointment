@@ -1,6 +1,8 @@
 package com.project.model.dto;
 
-public class AffiliationDTO {
+import com.project.service.adapter.ClientObject;
+
+public class AffiliationDTO implements ClientObject {
     private String email;
     private String hospitalName;
     private String city;
