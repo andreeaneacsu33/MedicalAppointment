@@ -12,7 +12,6 @@ public class DebugLogger extends AbstractLogger {
     @Override
     protected void printMsg(String msg) {
         System.out.println("[ DEBUG ] : "+msg);
-
     }
 
 }

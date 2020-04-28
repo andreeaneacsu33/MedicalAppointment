@@ -1,7 +1,5 @@
 package com.project.logging;
 
-import org.springframework.stereotype.Component;
-
 public class Logger {
 
     public static AbstractLogger getLogger(){

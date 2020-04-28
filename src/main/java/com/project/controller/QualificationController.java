@@ -26,9 +26,10 @@ public class QualificationController {
     public ResponseEntity<?> saveQualification(@RequestBody QualificationDTO qualificationDTO){
         try{
             Qualification qualification=qualificationService.save(qualificationDTO);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Saved qualification",QualificationController.class));
             return new ResponseEntity<>(qualification, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Save qualification failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Save qualification failed with message: {1}",QualificationController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -37,9 +38,10 @@ public class QualificationController {
     public ResponseEntity<?> getQualification(@PathVariable int idDoctor){
         try{
             Qualification qualification=qualificationService.findQualification(idDoctor);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved doctor's qualification",QualificationController.class));
             return new ResponseEntity<>(qualification, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve doctor's qualification failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve doctor's qualification failed with message: {1}",QualificationController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }

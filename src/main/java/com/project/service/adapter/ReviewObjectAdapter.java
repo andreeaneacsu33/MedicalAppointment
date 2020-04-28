@@ -1,19 +1,23 @@
 package com.project.service.adapter;
 
 
+import com.project.logging.AbstractLogger;
+import com.project.logging.Logger;
 import com.project.model.Review;
 import com.project.model.dto.ReviewDTO;
 import com.project.persistence.impl.DoctorRepository;
 import com.project.persistence.impl.PatientRepository;
 
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ReviewObjectAdapter implements ObjectAdapter {
     private DoctorRepository repoDoctor;
-
     private PatientRepository repoPatient;
+    private AbstractLogger logger = Logger.getLogger();
+
 
     public ReviewObjectAdapter(DoctorRepository repoDoctor, PatientRepository repoPatient) {
         this.repoDoctor=repoDoctor;
@@ -35,8 +39,9 @@ public class ReviewObjectAdapter implements ObjectAdapter {
             review.setReviewDate(reviewDate);
             review.setRecommend(reviewDTO.getRecommend());
             return review;
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException ex) {
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("Converting review to reviewDTO failed with message: {0}",ex.getMessage()));
+            ex.printStackTrace();
         }
         return null;
     }

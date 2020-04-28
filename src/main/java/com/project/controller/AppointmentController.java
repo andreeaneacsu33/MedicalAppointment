@@ -26,9 +26,10 @@ public class AppointmentController {
     public ResponseEntity<?> saveAppointment(@RequestBody AppointmentDTO appointmentDTO){
         try{
             Appointment appointment=appointmentService.save(appointmentDTO);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Saved appointment",AppointmentController.class));
             return new ResponseEntity<>(appointment, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Save appointment failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Save appointment failed with message: {1}",AppointmentController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -37,9 +38,10 @@ public class AppointmentController {
     public ResponseEntity<?> getDoctorAppointments(@PathVariable int idDoctor){
         try{
             List<Appointment> appointments=appointmentService.findDoctorAppointments(idDoctor);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved doctor's appointments",AppointmentController.class));
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve doctor's appointments failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve doctor's appointments failed with message: {1}",AppointmentController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -48,9 +50,10 @@ public class AppointmentController {
     public ResponseEntity<?> getDoctorAppointmentsWithDate(@PathVariable int idDoctor, @PathVariable String currentDate){
         try{
             List<Appointment> appointments=appointmentService.findDoctorAppointmentsWithDate(idDoctor,currentDate);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved doctor's appointments on date",AppointmentController.class));
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve doctor's appointments on date failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve doctor's appointments on date failed with message: {1}",AppointmentController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -59,9 +62,10 @@ public class AppointmentController {
     public ResponseEntity<?> getPatientAppointments(@PathVariable int idPatient, @PathVariable String currentDate){
         try{
             List<Appointment> appointments=appointmentService.findPatientAppointments(idPatient,currentDate);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved patient's appointments on date",AppointmentController.class));
             return new ResponseEntity<>(appointments, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve patient's appointments on date failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve patient's appointments on date failed with message: {1}",AppointmentController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -70,9 +74,10 @@ public class AppointmentController {
     public ResponseEntity<?> removeAppointment(@PathVariable int idAppointment){
         try{
             Appointment appointment=appointmentService.removeAppointment(idAppointment);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Removed appointment",AppointmentController.class));
             return new ResponseEntity<>(appointment,HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Remove appointment failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Remove appointment failed with message: {1}",AppointmentController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

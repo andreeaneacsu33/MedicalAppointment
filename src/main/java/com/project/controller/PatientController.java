@@ -24,9 +24,10 @@ public class PatientController {
     public ResponseEntity<?> getUser(@PathVariable String email){
         Patient patient= patientService.findPatient(email);
         if(patient==null){
-            logger.log(AbstractLogger.ERROR, "Retrieve patient failed");
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Patient not found",PatientController.class));
             return new ResponseEntity<>("Not found!", HttpStatus.NOT_FOUND);
         }
+        logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved patient",PatientController.class));
         return new ResponseEntity<>(patient,HttpStatus.OK);
     }
 }

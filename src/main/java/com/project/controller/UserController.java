@@ -18,6 +18,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -39,6 +40,7 @@ public class UserController {
     ////@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public List<User> getAll(){
+        logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved users",UserController.class));
         return service.findUsers();
     }
 
@@ -46,8 +48,10 @@ public class UserController {
     public ResponseEntity<?> getUser(@PathVariable String email){
         User user= service.findUser(email);
         if(user==null){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve user failed",UserController.class));
             return new ResponseEntity<>("Not found!",HttpStatus.NOT_FOUND);
         }
+        logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved user",UserController.class));
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
@@ -56,7 +60,8 @@ public class UserController {
         try{
             User user=service.save(userDTO);
             if(user==null){
-                return new ResponseEntity<>("IEmail already in use!", HttpStatus.BAD_REQUEST);
+                logger.log(AbstractLogger.ERROR, "User sign up failed due to email already in use.");
+                return new ResponseEntity<>("Email already in use!", HttpStatus.BAD_REQUEST);
             }
             final Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -66,8 +71,10 @@ public class UserController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             final String token = jwtTokenUtil.generateToken(authentication);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - User signed up",UserController.class));
             return ResponseEntity.ok(new AuthToken(token));
         }catch(Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - User sign up failed with message {1}",UserController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -83,6 +90,7 @@ public class UserController {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
+        logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - User registered",UserController.class));
         return ResponseEntity.ok(new AuthToken(token));
     }
 }

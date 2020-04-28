@@ -26,9 +26,10 @@ public class ReviewController {
     public ResponseEntity<?> getReview(@PathVariable int idPatient,@PathVariable int idDoctor){
         try{
             Review review=reviewService.findReview(idPatient,idDoctor);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved review",ReviewController.class));
             return new ResponseEntity<>(review, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve review failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve review failed with message: {1}",ReviewController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -37,9 +38,10 @@ public class ReviewController {
     public ResponseEntity<?> saveAffiliation(@RequestBody ReviewDTO reviewDTO){
         try{
             Review review=reviewService.save(reviewDTO);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved review",UserController.class));
             return new ResponseEntity<>(review, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Save review failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve review failed with message: {1}",ReviewController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -47,7 +49,7 @@ public class ReviewController {
     @RequestMapping(value = "/reviews/{idDoctor}", method = RequestMethod.GET)
     public ResponseEntity<?> getReviews(@PathVariable int idDoctor){
         List<Review> reviews=reviewService.findReviews(idDoctor);
-        logger.log(AbstractLogger.INFO, "Retrieving doctor's reviews");
+        logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved doctor's reviews",ReviewController.class));
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 }

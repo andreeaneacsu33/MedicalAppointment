@@ -26,9 +26,10 @@ public class AffiliationController {
     public ResponseEntity<?> saveAffiliation(@RequestBody AffiliationDTO affiliationDTO){
         try{
             Affiliation affiliation=affiliationService.save(affiliationDTO);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Save affiliation",AffiliationController.class));
             return new ResponseEntity<>(affiliation, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve all affiliations failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Save affiliation failed with message: {1}",AffiliationController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -37,9 +38,10 @@ public class AffiliationController {
     public ResponseEntity<?> getAffiliation(@PathVariable int idDoctor){
         try{
             List<Affiliation> affiliations=affiliationService.findAffiliations(idDoctor);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved doctor's affiliations",AffiliationController.class));
             return new ResponseEntity<>(affiliations, HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve doctor's affiliations failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve doctor's affiliations failed with message: {1}",AffiliationController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -48,9 +50,10 @@ public class AffiliationController {
     public ResponseEntity<?> getCities(){
         try{
             List<String> cities=affiliationService.findDistinctCities();
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved all affiliation cities",AffiliationController.class));
             return new ResponseEntity<>(cities,HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve all affiliation cities failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve all affiliation cities failed with message: {1}",AffiliationController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
@@ -59,9 +62,10 @@ public class AffiliationController {
     public ResponseEntity<?> getHospitals(){
         try{
             List<String> hospitals=affiliationService.findDistinctHospitals();
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Retrieved all affiliation hospitals",AffiliationController.class));
             return new ResponseEntity<>(hospitals,HttpStatus.OK);
         }catch (Exception ex){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Retrieve all affiliation hospitals failed with message: {0}",ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve all affiliation hospitals failed with message: {1}",AffiliationController.class,ex.getMessage()));
             return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
