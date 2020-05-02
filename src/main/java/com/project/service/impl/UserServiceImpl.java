@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessageRemovedException;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -61,9 +62,11 @@ public class UserServiceImpl implements com.project.service.UserService, UserDet
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
        User user=repoUser.getByEmail(email);
        if(user==null){
+           logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - User not found",UserServiceImpl.class));
            throw new UsernameNotFoundException("Invalid username or password.");
        }
-       return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),getAuthority(user));
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - User found",UserServiceImpl.class));
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),getAuthority(user));
     }
 
 
@@ -77,6 +80,7 @@ public class UserServiceImpl implements com.project.service.UserService, UserDet
     public List<User> findUsers() {
         List<User> list=new ArrayList<>();
         repoUser.getAll().forEach(list::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved users",UserServiceImpl.class));
         return list;
     }
 
@@ -110,6 +114,7 @@ public class UserServiceImpl implements com.project.service.UserService, UserDet
                     break;
         }
         User saved=repoUser.save(user1);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - User saved",UserServiceImpl.class));
         sendEmail(user);
         return saved;
     }
@@ -124,7 +129,7 @@ public class UserServiceImpl implements com.project.service.UserService, UserDet
             helper.setSubject(emailContent.getSubject());
             message.setContent(emailContent.getText(),"text/html");
             emailSender.send(message);
-            logger.log(AbstractLogger.INFO, "Email successfully sent!");
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Email sent",UserServiceImpl.class));
         } catch (MessagingException exception ) {
             exception.printStackTrace();
         }

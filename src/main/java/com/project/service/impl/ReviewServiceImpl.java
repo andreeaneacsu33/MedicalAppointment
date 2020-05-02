@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<Review> findReviews(int idDoctor) {
         List<Review> reviewList = new ArrayList<>();
         repoReview.getAll(idDoctor).forEach(reviewList::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved reviews",ReviewServiceImpl.class));
         return reviewList;
     }
 
@@ -60,6 +62,7 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = (Review) reviewObjectAdapter.convertFromClientToModel(reviewDTO);
         Review reviewSaved = repoReview.save(review);
         sendEmail(review.getIdPatient(), reviewSaved);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Saved review",ReviewServiceImpl.class));
         return reviewSaved;
     }
 
@@ -73,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService {
             helper.setSubject(emailContent.getSubject());
             message.setContent(emailContent.getText(), "text/html");
             emailSender.send(message);
-            logger.log(AbstractLogger.INFO, "Email successfully sent!");
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Email sent",ReviewServiceImpl.class));
         } catch (MessagingException exception) {
             exception.printStackTrace();
         }
@@ -81,6 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review findReview(int idPatient, int idDoctor) {
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Review found",ReviewServiceImpl.class));
         return repoReview.findOne(idPatient, idDoctor);
     }
 }

@@ -14,7 +14,7 @@ public class PatientRepository {
     private static SessionFactory sessionFactory;
     public Iterable<Patient> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Patient> patients=null;
+        List<Patient> patients;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{
@@ -51,7 +51,7 @@ public class PatientRepository {
 
     public Patient findOne(int id){
         sessionFactory=HibernateUtil.getSessionFactory();
-        Patient patient=null;
+        Patient patient;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{

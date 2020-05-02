@@ -11,6 +11,7 @@ import com.project.service.adapter.AffiliationObjectAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<Affiliation> findAffiliations() {
         List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
-
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved all affiliations",AffiliationServiceImpl.class));
         return affiliations;
     }
 
@@ -42,6 +43,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public Affiliation save(AffiliationDTO affiliationDTO) {
         AffiliationObjectAdapter affiliationObjectAdapter = new AffiliationObjectAdapter(repoDoctor);
         Affiliation affiliation = (Affiliation) affiliationObjectAdapter.convertFromClientToModel(affiliationDTO);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Saved affiliation",AffiliationServiceImpl.class));
         return repoAffiliation.save(affiliation);
     }
 
@@ -49,7 +51,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<Affiliation> findAffiliations(int idDoctor) {
         List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
-        logger.log(AbstractLogger.INFO, "Retrieve all affiliations");
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved doctor's affiliations",AffiliationServiceImpl.class));
         return affiliations.stream().filter(affiliation -> affiliation.getIdDoctor().getId() == idDoctor).collect(Collectors.toList());
     }
 
@@ -57,6 +59,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<String> findDistinctCities() {
         List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved distinct cities",AffiliationServiceImpl.class));
         return affiliations.stream().map(Affiliation::getCity).distinct().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
     }
 
@@ -64,6 +67,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<String> findDistinctHospitals() {
         List<Affiliation> affiliations = new ArrayList<>();
         repoAffiliation.getAll().forEach(affiliations::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved distinct hospitals",AffiliationServiceImpl.class));
         return affiliations.stream().map(Affiliation::getHospitalName).distinct().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
     }
 

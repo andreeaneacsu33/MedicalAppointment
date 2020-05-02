@@ -51,6 +51,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Appointment appointment = (Appointment) aoAdapter.convertFromClientToModel(appointmentDTO);
         Appointment appointmentSaved = repoAppointment.save(appointment);
         sendEmail(appointment.getPatient(), appointmentSaved);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Saved appointment",AppointmentServiceImpl.class));
         return appointmentSaved;
     }
 
@@ -58,6 +59,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<Appointment> findAppointments() {
         List<Appointment> appointments = new ArrayList<>();
         repoAppointment.getAll().forEach(appointments::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved appointments",AppointmentServiceImpl.class));
         return appointments;
     }
 
@@ -65,6 +67,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<Appointment> findDoctorAppointments(int idDoctor) {
         List<Appointment> appointments = new ArrayList<>();
         repoAppointment.getAll().forEach(appointments::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved doctor's appointments",AppointmentServiceImpl.class));
         return appointments.stream().filter(app -> app.getDoctor().getId() == idDoctor).collect(Collectors.toList());
     }
 
@@ -75,12 +78,14 @@ public class AppointmentServiceImpl implements AppointmentService {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date current = df.parse(currentDate);
             repoAppointment.getAll().forEach(appointments::add);
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved doctor's appointments from date",AppointmentServiceImpl.class));
             return appointments.stream().filter(app -> app.getDoctor().getId() == idDoctor &&
                     app.getStartDate().getYear() == current.getYear() &&
                     app.getStartDate().getDate() == current.getDate() &&
                     app.getStartDate().getMonth() == current.getMonth() &&
                     app.getStartDate().getTime() > current.getTime()).collect(Collectors.toList());
         } catch (Exception ex) {
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve doctor's appointments from date failed with message: {1}",AppointmentServiceImpl.class, ex.getMessage()));
             ex.printStackTrace();
         }
         return null;
@@ -94,8 +99,10 @@ public class AppointmentServiceImpl implements AppointmentService {
             df.setTimeZone(TimeZone.getTimeZone("UTC+0300"));
             Date current = df.parse(currentDate);
             repoAppointment.getAll().forEach(appointments::add);
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved patient's appointments from date",AppointmentServiceImpl.class));
             return appointments.stream().filter(app -> app.getPatient().getId() == idPatient && app.getStartDate().compareTo(current) > 0).collect(Collectors.toList());
         } catch (Exception ex) {
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve patient's appointments from date failed with message: {1}",AppointmentServiceImpl.class, ex.getMessage()));
             ex.printStackTrace();
         }
         return null;
@@ -106,8 +113,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         try {
             Appointment appointment = repoAppointment.findOne(id);
             repoAppointment.delete(appointment);
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved appointment",DoctorServiceImpl.class));
             return appointment;
         } catch (Exception ex) {
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve appointment failed with message: {1}",AppointmentServiceImpl.class,ex.getMessage()));
             ex.printStackTrace();
         }
         return null;
@@ -123,9 +132,9 @@ public class AppointmentServiceImpl implements AppointmentService {
             helper.setSubject(emailContent.getSubject());
             message.setContent(emailContent.getText(), "text/html");
             emailSender.send(message);
-            System.out.println("Email successfully sent!");
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Email sent",AppointmentServiceImpl.class));
         } catch (MessagingException ex) {
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("Send email failed with message: {0}", ex.getMessage()));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Send email failed with message: {1}",AppointmentServiceImpl.class, ex.getMessage()));
             ex.printStackTrace();
         }
     }

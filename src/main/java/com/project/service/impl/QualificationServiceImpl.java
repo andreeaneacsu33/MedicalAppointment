@@ -12,6 +12,7 @@ import com.project.service.adapter.QualificationObjectAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class QualificationServiceImpl implements QualificationService {
     public List<Qualification> findQualifications() {
         List<Qualification> qualifications=new ArrayList<>();
         repoQualification.getAll().forEach(qualifications::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieve all qaulifications",QualificationServiceImpl.class));
         return qualifications;
     }
 
@@ -37,6 +39,7 @@ public class QualificationServiceImpl implements QualificationService {
     public Qualification save(QualificationDTO qDTO) {
         QualificationObjectAdapter qualificationObjectAdapter=new QualificationObjectAdapter(repoDoctor);
         Qualification qualification=(Qualification)qualificationObjectAdapter.convertFromClientToModel(qDTO);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Saved review",QualificationServiceImpl.class));
         return repoQualification.save(qualification);
     }
 
@@ -44,8 +47,10 @@ public class QualificationServiceImpl implements QualificationService {
     public Qualification findQualification(int idDoctor) {
         Doctor doc=repoDoctor.findOne(idDoctor);
         if(doc!=null){
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieve qualification",QualificationServiceImpl.class));
             return repoQualification.findOne(doc.getId());
         }
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Qualification not found",QualificationServiceImpl.class));
         return null;
     }
 }

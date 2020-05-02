@@ -14,7 +14,7 @@ public class SpecialtyRepository {
     private static SessionFactory sessionFactory;
     public Iterable<Specialty> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Specialty> specialties=null;
+        List<Specialty> specialties;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{

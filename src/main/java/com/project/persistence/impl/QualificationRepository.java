@@ -17,7 +17,7 @@ public class QualificationRepository {
 
     public Iterable<Qualification> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Qualification> qualifications=null;
+        List<Qualification> qualifications;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{

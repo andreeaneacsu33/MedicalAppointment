@@ -15,7 +15,7 @@ public class ReviewRepository {
 
     public Iterable<Review> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Review> reviews=null;
+        List<Review> reviews;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{
@@ -34,7 +34,7 @@ public class ReviewRepository {
 
     public Iterable<Review> getAll(int idDoctor) {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Review> reviews=null;
+        List<Review> reviews;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{

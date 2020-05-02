@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +38,7 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public int findTotalPages() {
         int totalSize=repoDoctor.count();
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Computed total pages of data",DoctorServiceImpl.class));
         return (totalSize+PAGE_SIZE-1)/PAGE_SIZE;
     }
 
@@ -44,6 +46,7 @@ public class DoctorServiceImpl implements DoctorService {
     public List<Doctor> findPaginated(int page) {
         List<Doctor> doctors=new ArrayList<>();
         repoDoctor.getPaginated((page-1)*PAGE_SIZE,PAGE_SIZE).forEach(doctors::add);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved data from page",DoctorServiceImpl.class));
         return doctors;
     }
 
@@ -52,6 +55,7 @@ public class DoctorServiceImpl implements DoctorService {
         List<Review> reviews=new ArrayList<>();
         repoReview.getAll(idDoctor).forEach(reviews::add);
         double averageRating=reviews.stream().mapToDouble(Review::getRating).average().orElse(5);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved doctor's overall rating",DoctorServiceImpl.class));
         return Double.parseDouble(new DecimalFormat("#.##").format(averageRating));
     }
 
@@ -65,6 +69,7 @@ public class DoctorServiceImpl implements DoctorService {
             int count = (int)reviews.stream().filter(x->x.getRating()==rate).count();
             ratings.put(i,count);
         }
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved doctor's overall rating statistics",DoctorServiceImpl.class));
         return ratings;
     }
 
@@ -81,6 +86,7 @@ public class DoctorServiceImpl implements DoctorService {
                 ratings.put(r.getWaitingTime(),1);
             }
         }
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved doctor's overall waiting statistics",DoctorServiceImpl.class));
         return ratings;
     }
 
@@ -89,6 +95,7 @@ public class DoctorServiceImpl implements DoctorService {
         List<Review> reviews=new ArrayList<>();
         repoReview.getAll(idDoctor).forEach(reviews::add);
         double averageWaitingTime=reviews.stream().mapToDouble(Review::getWaitingTime).average().orElse(0);
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved doctor's overall waiting time",DoctorServiceImpl.class));
         return Double.parseDouble(new DecimalFormat("#.##").format(averageWaitingTime));
     }
 }

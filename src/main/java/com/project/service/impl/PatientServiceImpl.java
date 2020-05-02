@@ -8,6 +8,8 @@ import com.project.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
+
 @Service
 public class PatientServiceImpl implements PatientService {
 
@@ -18,6 +20,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient findPatient(String username) {
+        logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Find patient",PatientServiceImpl.class));
         return repoPatient.findOne(username);
     }
 }

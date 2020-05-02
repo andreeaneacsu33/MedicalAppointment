@@ -15,7 +15,7 @@ public class DoctorRepository {
 
     public Iterable<Doctor> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Doctor> doctors=null;
+        List<Doctor> doctors;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{
@@ -34,7 +34,7 @@ public class DoctorRepository {
 
     public Iterable<Doctor> getPaginated(int first,int size){
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<Doctor> doctors=null;
+        List<Doctor> doctors;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{
@@ -90,7 +90,7 @@ public class DoctorRepository {
 
     public Doctor findOne(int id){
         sessionFactory=HibernateUtil.getSessionFactory();
-        Doctor doctor=null;
+        Doctor doctor;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{

@@ -17,7 +17,7 @@ public class UserRepository{
     }
     public Iterable<User> getAll() {
         sessionFactory= HibernateUtil.getSessionFactory();
-        List<User> users=null;
+        List<User> users;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
             try{
