@@ -71,4 +71,27 @@ public class UserRepository{
         }
         return null;
     }
+
+    public User update(User user){
+        sessionFactory= HibernateUtil.getSessionFactory();
+        try(Session session=sessionFactory.openSession()){
+            Transaction trans=null;
+            try{
+                trans=session.beginTransaction();
+                int upd=session.createNativeQuery("update user set password = :psw where id = :idd")
+                        .setParameter("psw",user.getPassword())
+                        .setParameter("idd",user.getId()).executeUpdate();
+                if(upd==1)
+                    return user;
+                else
+                    return null;
+            }catch (RuntimeException ex){
+                ex.printStackTrace();
+                if(trans!=null){
+                    trans.rollback();
+                }
+            }
+        }
+        return null;
+    }
 }

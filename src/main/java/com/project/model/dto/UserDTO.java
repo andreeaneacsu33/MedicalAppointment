@@ -10,6 +10,7 @@ public class UserDTO {
     private String role;
     private String specialty;
     private String gender;
+    private String newPassword;
 
     public UserDTO() {
     }
@@ -22,6 +23,12 @@ public class UserDTO {
         this.role = role;
         this.specialty = specialty;
         this.gender=gender;
+    }
+
+    public UserDTO(String email, String password, String newPassword) {
+        this.email = email;
+        this.password = password;
+        this.newPassword = newPassword;
     }
 
     public String getEmail() {
@@ -78,6 +85,14 @@ public class UserDTO {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     @Override

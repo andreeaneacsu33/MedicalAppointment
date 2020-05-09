@@ -93,4 +93,15 @@ public class UserController {
         logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - User registered",UserController.class));
         return ResponseEntity.ok(new AuthToken(token));
     }
+
+    @RequestMapping(value = "/user", method = RequestMethod.PUT)
+    public ResponseEntity<?> changePassword(@RequestBody UserDTO userToModify){
+        User user=service.updateUser(userToModify);
+        if(user==null){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve user with email {1} failed",UserController.class,userToModify.getEmail()));
+            return new ResponseEntity<>("Incorrect password!", HttpStatus.BAD_REQUEST);
+        }
+        logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Changed user\'s password",UserController.class));
+        return new ResponseEntity<>(user,HttpStatus.OK);
+    }
 }

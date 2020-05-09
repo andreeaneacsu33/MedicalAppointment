@@ -62,7 +62,7 @@ public class FilterController {
     public ResponseEntity<?> findPaginatedForCityFilter(@PathVariable String[] cities,@PathVariable int page){
         int totalPages=filterService.findTotalPagesForCityFilter(cities);
         if(page>totalPages || page<1){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieved doctors filtered by city on page {1}",FilterController.class,page));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieving doctors filtered by city on page {1} failed",FilterController.class,page));
             return new ResponseEntity<>("Page not found!", HttpStatus.NOT_FOUND);
         }
         List<Doctor> doctors=filterService.findPaginatedForCityFilter(page,cities);
@@ -74,7 +74,7 @@ public class FilterController {
     public ResponseEntity<?> findPaginatedForHospitalFilter(@PathVariable String[] hospitals,@PathVariable int page){
         int totalPages=filterService.findTotalPagesForHospitalFilter(hospitals);
         if(page>totalPages || page<1){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieved doctors filtered by hospital on page {1}",FilterController.class,page));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieved doctors filtered by hospital on page {1} failed",FilterController.class,page));
             return new ResponseEntity<>("Page not found!", HttpStatus.NOT_FOUND);
         }
         List<Doctor> doctors=filterService.findPaginatedForHospitalFilter(page,hospitals);
@@ -86,7 +86,7 @@ public class FilterController {
     public ResponseEntity<?> findPaginatedForCityAndHospitalFilter(@PathVariable String[] cities,@PathVariable String[] hospitals,@PathVariable int page){
         int totalPages=filterService.findTotalPagesForCityAndHospitalFilter(cities,hospitals);
         if(page>totalPages || page<1){
-            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieved doctors filtered by city and hospital on page {1}",FilterController.class,page));
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieved doctors filtered by city and hospital on page {1} failed",FilterController.class,page));
             return new ResponseEntity<>("Page not found!", HttpStatus.NOT_FOUND);
         }
         List<Doctor> doctors=filterService.findPaginatedForCityAndHospitalFilter(page,cities,hospitals);
