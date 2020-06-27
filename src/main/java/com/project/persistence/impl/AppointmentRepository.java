@@ -69,7 +69,7 @@ public class AppointmentRepository {
     }
 
     public Appointment findOne(int idAppointment) {
-        sessionFactory= HibernateUtil.getSessionFactory();
+        sessionFactory=HibernateUtil.getSessionFactory();
         Appointment appointment;
         try(Session session=sessionFactory.openSession()){
             Transaction trans=null;
@@ -77,6 +77,25 @@ public class AppointmentRepository {
                 trans=session.beginTransaction();
                 appointment=session.createNativeQuery("select * from appointment where id like :idd",Appointment.class).setParameter("idd",idAppointment).getSingleResult();
                 System.out.println(appointment);
+                return appointment;
+            }catch (RuntimeException ex){
+                ex.printStackTrace();
+                if(trans!=null){
+                    trans.rollback();
+                }
+            }
+        }
+        return null;
+    }
+
+    public Appointment update(Appointment appointment) {
+        sessionFactory=HibernateUtil.getSessionFactory();
+        try(Session session=sessionFactory.openSession()){
+            Transaction trans=null;
+            try{
+                trans=session.beginTransaction();
+                session.update(appointment);
+                trans.commit();
                 return appointment;
             }catch (RuntimeException ex){
                 ex.printStackTrace();

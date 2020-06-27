@@ -3,6 +3,7 @@ package com.project.model.dto;
 import com.project.service.adapter.ClientObject;
 
 public class AppointmentDTO implements ClientObject {
+    private int id;
     private String idDoctor;
     private String idPatient;
     private String idAffiliation;
@@ -69,6 +70,14 @@ public class AppointmentDTO implements ClientObject {
 
     public void setIdAffiliation(String idAffiliation) {
         this.idAffiliation = idAffiliation;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

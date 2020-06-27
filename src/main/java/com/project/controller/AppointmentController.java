@@ -81,4 +81,18 @@ public class AppointmentController {
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/appointment", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateAppointment(@RequestBody AppointmentDTO appointment){
+        try{
+            System.out.println(appointment);
+            Appointment appointmentUpd=appointmentService.updateAppointment(appointment);
+            logger.log(AbstractLogger.INFO, MessageFormat.format("{0} - Updated appointment",AppointmentController.class));
+            System.out.println(appointment);
+            return new ResponseEntity<>(appointmentUpd, HttpStatus.OK);
+        }catch (Exception ex){
+            logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Update appointment failed with message: {1}",AppointmentController.class,ex.getMessage()));
+            return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+    }
 }

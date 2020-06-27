@@ -12,4 +12,5 @@ public interface AppointmentService {
     List<Appointment> findDoctorAppointmentsWithDate(int idDoctor,String currentDate);
     List<Appointment> findPatientAppointments(int idPatient,String currentDate);
     Appointment removeAppointment(int id);
+    Appointment updateAppointment(AppointmentDTO appointmentDTO);
 }

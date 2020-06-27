@@ -113,12 +113,27 @@ public class AppointmentServiceImpl implements AppointmentService {
         try {
             Appointment appointment = repoAppointment.findOne(id);
             repoAppointment.delete(appointment);
-            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved appointment",DoctorServiceImpl.class));
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Retrieved appointment",AppointmentServiceImpl.class));
             return appointment;
         } catch (Exception ex) {
             logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Retrieve appointment failed with message: {1}",AppointmentServiceImpl.class,ex.getMessage()));
             ex.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public Appointment updateAppointment(AppointmentDTO appointmentDTO) {
+        AppointmentObjectAdapter aoAdapter = new AppointmentObjectAdapter(repoAffiliation, repoDoctor, repoPatient);
+        Appointment appointment = (Appointment) aoAdapter.convertFromClientToModel(appointmentDTO);
+        appointment.setId(appointmentDTO.getId());
+        Appointment appointmentUpd=repoAppointment.update(appointment);
+        if(appointmentUpd!=null){
+            sendEmail(appointment.getPatient(), appointmentUpd);
+            logger.log(AbstractLogger.DEBUG, MessageFormat.format("{0} - Updated appointment",AffiliationServiceImpl.class));
+            return appointmentUpd;
+        }
+        logger.log(AbstractLogger.ERROR, MessageFormat.format("{0} - Update appointment failed",AppointmentServiceImpl.class));
         return null;
     }
 
